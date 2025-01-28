@@ -35,32 +35,16 @@ const PDFUploadAndConvert: React.FC = () => {
     }
   };
 
+  let splitFormats: string[] = [];
+
   const downloadCSV = (data: any[]) => {
     // Define CSV headers
-    const headers = [
-      '氏名',
-      '氏名ふりがな',
-      '学校名',
-      '年齢',
-      '郵便番号',
-      '住所',
-      'メールアドレス',
-      '電話番号'
-    ];
+    const headers = splitFormats;
 
     // Convert data to CSV rows
     const csvRows = [
       headers,
-      ...data.map(item => [
-        item.氏名,
-        item.氏名ふりがな,
-        item.学校名,
-        item.年齢,
-        item.郵便番号,
-        item.住所,
-        item.メールアドレス,
-        item.電話番号
-      ])
+      ...data.map(item => splitFormats.map(formatItem => item[formatItem]))
     ];
 
     // Convert to CSV string
@@ -85,6 +69,12 @@ const PDFUploadAndConvert: React.FC = () => {
       return;
     }
 
+    splitFormats = format.split(/,|\n/).map(word => word.trim()).filter(word => word !== "");
+    if (splitFormats.length === 0) {
+      alert('区別する形式を入力してください。');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -102,34 +92,20 @@ const PDFUploadAndConvert: React.FC = () => {
 
       const prompt = `
           あなたはPDFからデータを抽出するAIアシスタントです。
-          このPDFの2ページ目から10ページ目までに記載されているアンケート回答から、
+          
           各回答者の以下の情報を抽出し、必ずJSON形式で返してください。
           テキスト形式での回答は避け、JSONのみを返してください。
           
           抽出する項目：
-          - 氏名
-          - 氏名ふりがな
-          - 学校名
-          - 年齢
-          - 郵便番号
-          - 住所
-          - メールアドレス
-          - 電話番号
+          ${splitFormats.map(format => `- ${format}`).join('\n          ')}
 
           必ず以下の形式のJSONで返してください：
           [
               {
-                  "氏名": "値",
-                  "氏名ふりがな": "値",
-                  "学校名": "値",
-                  "年齢": "値",
-                  "郵便番号": "値",
-                  "住所": "値",
-                  "メールアドレス": "値",
-                  "電話番号": "値"
+                  ${splitFormats.map(format => `"${format}": "値"`).join(',\n                  ')}
               },
               {
-                  // 2人目のデータ
+                  // 2種目のデータ
               },
               // ... 以降同様
           ]
