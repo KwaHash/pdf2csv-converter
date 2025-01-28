@@ -31,13 +31,13 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         contained: {
-          backgroundColor: "#4f46e5", // Default background color for "contained" buttons
+          backgroundColor: "#3b82f6", // Default background color for "contained" buttons
           display: "flex",
           alignItems: "center",
           gap: "8px",
           borderRadius: "2px",
-          padding: "7px",
-          fontSize: "16px",
+          padding: "5px 30px",
+          fontSize: "20px",
           color: "#fff", // Ensure text color is readable
           "&:hover": {
             backgroundColor: "#3f40d5", // Slightly darker on hover

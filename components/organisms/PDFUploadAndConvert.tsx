@@ -31,6 +31,10 @@ const PDFUploadAndConvert: React.FC = () => {
     }
   };
 
+  const handleConvert = async () => {
+    
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div className="grid grid-cols-[60%,1fr] gap-10 w-full flex-grow mt-3">
@@ -74,12 +78,23 @@ const PDFUploadAndConvert: React.FC = () => {
             />
           )}
         </div>
-        <div className="flex flex-col w-full p-6 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-5">区別する形式</h2>
-          <TextInput
-            value={format}
-            onChange={setFormat}
-          />
+        <div className="flex flex-col justify-evenly w-full p-6 bg-white rounded-lg shadow-md">
+          <div className="flex flex-col gap-5">
+            <h2 className="text-xl font-bold">区別する形式</h2>
+            <TextInput
+              value={format}
+              onChange={setFormat}
+            />
+          </div>
+          <div className="flex justify-center">
+            <Button
+              variant="contained"
+              onClick={handleConvert}
+              disabled={!pdfFile || !format.trim()}
+            >
+              変換する
+            </Button>
+          </div>
         </div>
       </div>
     </ThemeProvider>
