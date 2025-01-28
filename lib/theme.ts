@@ -45,6 +45,21 @@ const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            fontSize: "16px",
+            lineHeight: "1.5",
+            fontWeight: 500,
+          },
+          "& .Mui-disabled": {
+            background: "#e6e6e6",
+            fontWeight: 700,
+          },
+        },
+      },
+    },
   },
 });
 
