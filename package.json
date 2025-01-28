@@ -16,7 +16,8 @@
     "next": "14.2.23",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.4.0"
+    "react-icons": "^5.4.0",
+    "react-loading-indicators": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
