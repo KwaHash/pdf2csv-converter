@@ -91,28 +91,27 @@ const PDFUploadAndConvert: React.FC = () => {
       });
 
       const prompt = `
-          あなたはPDFからデータを抽出するAIアシスタントです。
-          
-          各回答者の以下の情報を抽出し、必ずJSON形式で返してください。
-          テキスト形式での回答は避け、JSONのみを返してください。
-          
-          抽出する項目：
-          ${splitFormats.map(format => `- ${format}`).join('\n          ')}
+        あなたはPDFからデータを抽出するAIアシスタントです。
+        
+        各回答者の以下の情報を抽出し、必ずJSON配列形式で返してください。
+        説明文や追加のテキストは一切含めないでください。
+        JSONのみを出力してください。
+        
+        抽出する項目：
+        ${splitFormats.map(format => `- ${format}`).join('\n    ')}
 
-          必ず以下の形式のJSONで返してください：
-          [
-              {
-                  ${splitFormats.map(format => `"${format}": "値"`).join(',\n                  ')}
-              },
-              {
-                  // 2種目のデータ
-              },
-              // ... 以降同様
-          ]
+        出力形式：
+        [
+            {
+                ${splitFormats.map(format => `"${format}": "値"`).join(',\n            ')}
+            }
+        ]
 
-          情報が見つからない場合は、その項目は空文字列("")としてください。
-          必ずJSONとして解析可能な形式で返してください。
-          各ページのアンケート回答を1つのオブジェクトとして配列に含めてください。
+        注意事項：
+        - 必ず配列[]で囲んでください
+        - 情報が見つからない場合は空文字列("")を使用
+        - 余分なテキストは含めない
+        - 完全なJSONとして解析可能な形式のみ
       `;
 
       const result = await model.generateContent([
@@ -123,23 +122,44 @@ const PDFUploadAndConvert: React.FC = () => {
       const response = await result.response;
       const text = response.text();
 
-      // For debugging
-      console.log('Raw response:', text);
+      // Improved JSON extraction and error handling
+      let extractedDataArray;
+      try {
+        // First, try to parse the entire response as JSON
+        const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
+        // First, try to parse the entire response as JSON
+        extractedDataArray = JSON.parse(cleanedText);
+      } catch (parseError) {
+        console.log('First parse attempt failed:', parseError);
 
-      // Extract JSON array from the response text
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) {
-        throw new Error('JSON data not found in response');
+        // If that fails, try to find JSON array in the text
+        const jsonMatch = text.match(/\[\s*{[\s\S]*}\s*\]/);
+        if (!jsonMatch) {
+          console.log('No JSON array pattern found in:', text);
+          throw new Error('有効なJSONデータが見つかりませんでした。応答形式を確認してください。');
+        }
+        try {
+          extractedDataArray = JSON.parse(jsonMatch[0]);
+        } catch (secondParseError) {
+          console.log('Second parse attempt failed:', secondParseError);
+          throw new Error('JSONの解析に失敗しました。');
+        }
       }
 
-      const extractedDataArray = JSON.parse(jsonMatch[0]) as any[];
+      // Validate that we have an array
+      if (!Array.isArray(extractedDataArray)) {
+        throw new Error('抽出されたデータが配列形式ではありません。');
+      }
 
-      // Download as CSV
-      downloadCSV(extractedDataArray);
+      // Validate array is not empty
+      if (extractedDataArray.length === 0) {
+        throw new Error('データが抽出されませんでした。');
+      }
 
+      downloadCSV(extractedDataArray);      // Download as CSV
     } catch (error) {
       console.error('Error extracting data:', error);
-      alert('データの抽出中にエラーが発生しました。詳細はコンソールを確認してください。');
+      alert(`データの抽出中にエラーが発生しました: ${error instanceof Error ? error.message : '不明なエラー'}`);
     } finally {
       setIsLoading(false);
     }
