@@ -1,7 +1,9 @@
-import Image from "next/image";
+import PDF2CSVConverterPage from "@/features/PDF2CSVConverterPage";
 
 export default function Home() {
   return (
-    <div></div>
+    <main className="flex flex-col min-h-screen">
+      <PDF2CSVConverterPage />
+    </main>
   );
 }
