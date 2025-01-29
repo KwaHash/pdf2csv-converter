@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import { FaFilePdf } from "react-icons/fa6";
 import { ThemeProvider, Button } from "@mui/material";
@@ -8,6 +9,7 @@ import Loading from '@/components/molecules/loading';
 import TextInput from '@/components/atoms/TextInput';
 import PDFUploaderButton from '@/components/atoms/PDFUploaderButton';
 import theme from '@/lib/theme';
+import pdfToText from 'react-pdftotext'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const PDFUploadAndConvert: React.FC = () => {
@@ -78,49 +80,17 @@ const PDFUploadAndConvert: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const formData = new FormData();
+      formData.append('pdf', pdfFile);
+      formData.append('formats', JSON.stringify(splitFormats));
 
-      const base64Data = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result?.toString().split(',')[1] || '';
-          resolve(base64);
-        };
-        reader.readAsDataURL(pdfFile);
+      const response = await axios.post('/api/process-pdf', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      const prompt = `
-        あなたはPDFからデータを抽出するAIアシスタントです。
-        
-        各回答者の以下の情報を抽出し、必ずJSON配列形式で返してください。
-        説明文や追加のテキストは一切含めないでください。
-        JSONのみを出力してください。
-        
-        抽出する項目：
-        ${splitFormats.map(format => `- ${format}`).join('\n    ')}
-
-        出力形式：
-        [
-          {
-            ${splitFormats.map(format => `"${format}": "値"`).join(',\n            ')}
-          }
-        ]
-
-        注意事項：
-        - 必ず配列[]で囲んでください
-        - 情報が見つからない場合は空文字列("")を使用
-        - 余分なテキストは含めない
-        - 完全なJSONとして解析可能な形式のみ
-      `;
-
-      const result = await model.generateContent([
-        prompt,
-        { inlineData: { data: base64Data, mimeType: "application/pdf" } }
-      ]);
-
-      const response = await result.response;
-      const text = response.text();
+      const text = response.data;
 
       // Improved JSON extraction and error handling
       let extractedDataArray;
