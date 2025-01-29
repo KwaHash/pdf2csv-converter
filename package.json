@@ -14,12 +14,14 @@
     "@google/generative-ai": "^0.21.0",
     "@mui/material": "^6.4.1",
     "@types/pdf-parse": "^1.1.4",
+    "axios": "^1.7.9",
     "next": "14.2.23",
     "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.4.0",
-    "react-loading-indicators": "^1.0.0"
+    "react-loading-indicators": "^1.0.0",
+    "react-pdftotext": "^1.3.4"
   },
   "devDependencies": {
     "@types/node": "^20",
