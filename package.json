@@ -1,6 +1,6 @@
 {
   "name": "pdf2csv-converter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "cross-env PORT=5000 next dev",
@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-icons": "^5.4.0",
     "react-loading-indicators": "^1.0.0",
-    "react-pdftotext": "^1.3.4"
+    "react-pdftotext": "^1.3.4",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@types/node": "^20",
