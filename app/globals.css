@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "YuGothic";
-  src: url("/fonts/yu-gothic-regular.ttf") format("truetype");
+  src: url("/localFonts/yu-gothic-regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   unicode-range: U+0000-002F, U+003A-0040, U+005B-0060, U+007B-3000, U+3000-30FF,
@@ -14,7 +14,7 @@
 
 @font-face {
   font-family: "YuGothic";
-  src: url("/fonts/yu-gothic-medium.ttf") format("truetype");
+  src: url("/localFonts/yu-gothic-medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   unicode-range: U+0000-002F, U+003A-0040, U+005B-0060, U+007B-3000, U+3000-30FF,
@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: "YuGothic";
-  src: url("/fonts/yu-gothic-semibold.ttf") format("truetype");
+  src: url("/localFonts/yu-gothic-semibold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   unicode-range: U+0000-002F, U+003A-0040, U+005B-0060, U+007B-3000, U+3000-30FF,
@@ -34,7 +34,7 @@
 
 @font-face {
   font-family: "YuGothic";
-  src: url("/fonts/yu-gothic-bold.ttf") format("truetype");
+  src: url("/localFonts/yu-gothic-bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   unicode-range: U+0000-002F, U+003A-0040, U+005B-0060, U+007B-3000, U+3000-30FF,
