@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env PORT=5000 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env PORT=5000 next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "@mui/material": "^6.4.1",
     "@types/pdf-parse": "^1.1.4",
     "axios": "^1.7.9",
+    "cross-env": "^7.0.3",
     "next": "14.2.23",
     "pdf-parse": "^1.1.1",
     "react": "^18",
