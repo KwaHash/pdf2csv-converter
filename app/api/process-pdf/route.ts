@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const GEMINI_API_KEY = "AIzaSyBPYZZGRBUW7_WuhZbUQxSGU-Y_2MdHW4g";
-
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -13,15 +11,17 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY || "");
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const genAI = new GoogleGenerativeAI(
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""
+    );
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro-002",
+    });
 
     const prompt = `
       あなたはPDFからデータを抽出するAIアシスタントです。
       
-      各回答者の以下の情報を抽出し、必ずJSON配列形式で返してください。
-      説明文や追加のテキストは一切含めないでください。
-      JSONのみを出力してください。
+      PDFの全てのエントリーについて、以下の情報を抽出し、必ずJSON配列形式で返してください。
       
       抽出する項目：
       ${formats.map((format: string) => `- ${format}`).join("\n    ")}
@@ -41,6 +41,9 @@ export async function POST(req: NextRequest) {
       - 余分なテキストは含めない
       - 完全なJSONとして解析可能な形式のみ
       - 型番や物品番号は、日本語の文字を含めてはならない
+      - PDFの全てのエントリーを抽出してください。一部のみではなく、全てのデータを返してください。
+      - 注釈や説明は一切不要です。純粋なJSONデータのみを返してください。
+      - 文字数制限による途中での切り捨ては避けてください。全てのエントリーを含めてください。
     `;
 
     const result = await model.generateContent([
