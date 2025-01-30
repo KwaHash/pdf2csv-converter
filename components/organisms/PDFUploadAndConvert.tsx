@@ -9,8 +9,6 @@ import Loading from '@/components/molecules/loading';
 import TextInput from '@/components/atoms/TextInput';
 import PDFUploaderButton from '@/components/atoms/PDFUploaderButton';
 import theme from '@/lib/theme';
-import pdfToText from 'react-pdftotext'
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const PDFUploadAndConvert: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,19 +37,19 @@ const PDFUploadAndConvert: React.FC = () => {
 
   let splitFormats: string[] = [];
 
-  const downloadCSV = (data: any[]) => {
+  const downloadCSV = (data: Record<string, string>[]) => {
     // Define CSV headers
     const headers = splitFormats;
 
     // Convert data to CSV rows
     const csvRows = [
       headers,
-      ...data.map(item => splitFormats.map(formatItem => item[formatItem]))
+      ...data.map((item: Record<string, string>) => splitFormats.map(formatItem => item[formatItem]))
     ];
 
     // Convert to CSV string
     const csvContent = csvRows
-      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .map(row => row.map((cell: string) => `"${cell}"`).join(','))
       .join('\n');
 
     // Create blob and download
