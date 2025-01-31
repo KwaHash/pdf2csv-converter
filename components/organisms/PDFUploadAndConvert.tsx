@@ -38,7 +38,6 @@ const PDFUploadAndConvert: React.FC = () => {
   let splitFormats: string[] = [];
 
   const downloadCSV = (data: Record<string, string>[]) => {
-    // Define CSV headers
     const headers = splitFormats;
 
     // Convert data to CSV rows
@@ -78,7 +77,6 @@ const PDFUploadAndConvert: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Convert PDF file to base64
       const formData = new FormData();
       formData.append('pdf', pdfFile);
       formData.append('formats', JSON.stringify(splitFormats));
@@ -89,31 +87,8 @@ const PDFUploadAndConvert: React.FC = () => {
         },
       });
 
-      const text = response.data;
-
-      // Improved JSON extraction and error handling
-      let extractedDataArray;
-      try {
-        // First, try to parse the entire response as JSON
-        const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
-        // First, try to parse the entire response as JSON
-        extractedDataArray = JSON.parse(cleanedText);
-      } catch (parseError) {
-        console.log('First parse attempt failed:', parseError);
-
-        // If that fails, try to find JSON array in the text
-        const jsonMatch = text.match(/\[\s*{[\s\S]*}\s*\]/);
-        if (!jsonMatch) {
-          console.log('No JSON array pattern found in:', text);
-          throw new Error('有効なJSONデータが見つかりませんでした。応答形式を確認してください。');
-        }
-        try {
-          extractedDataArray = JSON.parse(jsonMatch[0]);
-        } catch (secondParseError) {
-          console.log('Second parse attempt failed:', secondParseError);
-          throw new Error('JSONの解析に失敗しました。');
-        }
-      }
+      // The response.data is already parsed JSON
+      const extractedDataArray = response.data;
 
       // Validate that we have an array
       if (!Array.isArray(extractedDataArray)) {
@@ -125,7 +100,7 @@ const PDFUploadAndConvert: React.FC = () => {
         throw new Error('データが抽出されませんでした。');
       }
 
-      downloadCSV(extractedDataArray);      // Download as CSV
+      downloadCSV(extractedDataArray);
     } catch (error) {
       console.error('Error extracting data:', error);
       alert(`データの抽出中にエラーが発生しました: ${error instanceof Error ? error.message : '不明なエラー'}`);
