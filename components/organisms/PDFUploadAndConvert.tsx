@@ -40,13 +40,11 @@ const PDFUploadAndConvert: React.FC = () => {
   const downloadCSV = (data: Record<string, string>[]) => {
     const headers = splitFormats;
 
-    // Convert data to CSV rows
     const csvRows = [
       headers,
       ...data.map((item: Record<string, string>) => splitFormats.map(formatItem => item[formatItem]))
     ];
 
-    // Convert to CSV string
     const csvContent = csvRows
       .map(row => row.map((cell: string) => `"${cell}"`).join(','))
       .join('\n');
@@ -87,15 +85,12 @@ const PDFUploadAndConvert: React.FC = () => {
         },
       });
 
-      // The response.data is already parsed JSON
       const extractedDataArray = response.data;
 
-      // Validate that we have an array
       if (!Array.isArray(extractedDataArray)) {
         throw new Error('抽出されたデータが配列形式ではありません。');
       }
 
-      // Validate array is not empty
       if (extractedDataArray.length === 0) {
         throw new Error('データが抽出されませんでした。');
       }
