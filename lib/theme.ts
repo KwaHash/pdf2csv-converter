@@ -10,37 +10,37 @@ const theme = createTheme({
   },
   palette: {
     text: {
-      primary: "#484848", // Default primary text color
+      primary: "#484848",
     },
   },
   components: {
     MuiSelect: {
       styleOverrides: {
         select: {
-          padding: "10px", // Reset padding for select elements
+          padding: "10px",
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
-          padding: "10px", // Reset padding for outlined input elements
+          padding: "10px",
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         contained: {
-          backgroundColor: "#3b82f6", // Default background color for "contained" buttons
+          backgroundColor: "#3b82f6",
           display: "flex",
           alignItems: "center",
           gap: "8px",
           borderRadius: "2px",
           padding: "5px 30px",
           fontSize: "20px",
-          color: "#fff", // Ensure text color is readable
+          color: "#fff",
           "&:hover": {
-            backgroundColor: "#3f40d5", // Slightly darker on hover
+            backgroundColor: "#3f40d5",
           },
         },
       },

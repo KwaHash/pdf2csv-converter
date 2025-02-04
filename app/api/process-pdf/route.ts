@@ -71,11 +71,8 @@ async function processPage(
     let text = response.text();
 
     if (typeof text !== "string") {
-      // console.log("Response is not a string:", text);
       text = JSON.stringify(text);
     }
-
-    // console.log("Raw response:", text);
 
     // Parse the JSON response with multiple fallback methods
     let parsedData = null;
@@ -84,10 +81,7 @@ async function processPage(
     try {
       const cleanedText = text.replace(/```json\n?|\n?```/g, "").trim();
       parsedData = JSON.parse(cleanedText);
-      // console.log("Parsed with Method 1");
     } catch (error) {
-      // console.log("Method 1 failed:", error);
-
       // Method 2: Try to extract JSON from the text
       try {
         const jsonStartIndex = text.indexOf("[");
@@ -95,7 +89,6 @@ async function processPage(
         if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
           const jsonText = text.substring(jsonStartIndex, jsonEndIndex);
           parsedData = JSON.parse(jsonText);
-          // console.log("Parsed with Method 2");
         }
       } catch (error) {
         // console.log("Method 2 failed:", error);
@@ -103,11 +96,9 @@ async function processPage(
     }
 
     if (!parsedData) {
-      // console.log("Could not parse any data from response");
       return [];
     }
 
-    // Ensure the result is an array
     const dataArray = Array.isArray(parsedData) ? parsedData : [parsedData];
 
     // Validate and format each object
@@ -150,7 +141,6 @@ export async function POST(req: NextRequest) {
 
     for (const pageData of pdfPages) {
       const pageResults = await processPage(pageData, formats, model);
-      // console.log(pageResults, pageResults.length);
       if (pageResults && pageResults.length > 1) {
         allResults.push(...pageResults);
       }
