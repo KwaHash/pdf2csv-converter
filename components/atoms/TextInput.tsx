@@ -11,7 +11,7 @@ const TextInput: React.FC<TextInputProps> = ({ value, onChange }) => {
   return (
     <ThemeProvider theme={theme}>
       <TextField
-        rows={20}
+        rows={13}
         multiline
         variant="outlined"
         value={value}
